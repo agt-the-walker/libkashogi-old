@@ -37,7 +37,7 @@ Piece *Piece::loadBOD(QTextStream &stream)
 {
     QString buffer = stream.read(2);
     if (buffer.size() < 2)
-        throw std::invalid_argument("incomplete piece");
+        throw std::runtime_error("incomplete piece");
 
     Player player = (buffer[0] == 'v' ? GOTE : SENTE);
 
@@ -54,4 +54,18 @@ void Piece::saveBOD(QTextStream &stream) const
 {
     stream << (mPlayer == SENTE ? ' ' : 'v')
            << QChar(flavorCodes[mType][mFlavor]);
+}
+
+QChar Piece::defaultCode(Type type)
+{
+    return flavorCodes[type][DEFAULT];
+}
+
+Piece::Type Piece::type(QChar defaultCode)
+{
+    for (int type = 0; type < NB_TYPES; type++)
+        if (defaultCode == flavorCodes[type][DEFAULT])
+            return static_cast<Type>(type);
+
+    throw std::runtime_error("unknown piece");
 }

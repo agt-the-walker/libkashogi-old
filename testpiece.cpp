@@ -34,7 +34,7 @@ void TestPiece::invalidBOD()
     try {
         Piece::loadBOD(in);
         QVERIFY(false);
-    } catch (std::invalid_argument &e) {
+    } catch (std::runtime_error &e) {
         QCOMPARE(e.what(), "incomplete piece");
     }
 }
@@ -60,7 +60,7 @@ void TestPiece::unknownBOD_data()
 void TestPiece::identity()
 {
     QFETCH(QString, inBod);
-    
+
     QTextStream in(&inBod);
     Piece *piece = Piece::loadBOD(in);
 
@@ -85,4 +85,32 @@ void TestPiece::identity_data()
     QTest::newRow("Gote promoted pawn")    << "vと";
 }
 
-QTEST_MAIN(TestPiece)
+void TestPiece::defaultCode()
+{
+    QFETCH(Piece::Type, type);
+    QFETCH(QChar, code);
+
+    QChar actualCode = Piece::defaultCode(type);
+    QCOMPARE(actualCode, code);
+    QCOMPARE(Piece::type(code), type);
+}
+
+void TestPiece::defaultCode_data()
+{
+    QTest::addColumn<Piece::Type>("type");
+    QTest::addColumn<QChar>("code");
+
+    QTest::newRow("King") << Piece::KING << QChar(u'王');
+    QTest::newRow("Rook") << Piece::ROOK << QChar(u'飛');
+    QTest::newRow("Pawn") << Piece::PAWN << QChar(u'歩');
+}
+
+void TestPiece::invalidCode()
+{
+    try {
+        Piece::type(u'玉');
+        QVERIFY(false);
+    } catch (std::runtime_error &e) {
+        QCOMPARE(e.what(), "unknown piece");
+    }
+}

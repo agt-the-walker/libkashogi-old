@@ -10,12 +10,15 @@ class Piece
 public:
     enum Type { KING, ROOK, BISHOP, GOLD, SILVER, KNIGHT, LANCE, PAWN,
                 NB_TYPES };
-    enum Flavor { NORMAL, PROMOTED, JEWELED, NB_FLAVORS };
+    enum Flavor { DEFAULT, PROMOTED, JEWELED, NB_FLAVORS };
 
-    Piece(Player player, Type type, Flavor flavor = NORMAL);
+    Piece(Player player, Type type, Flavor flavor = DEFAULT);
 
     static Piece *loadBOD(QTextStream &stream);
     void saveBOD(QTextStream &stream) const;
+
+    static QChar defaultCode(Type type);
+    static Type type(QChar defaultCode);
 
 private:
     Player mPlayer;
