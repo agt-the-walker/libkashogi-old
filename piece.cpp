@@ -1,5 +1,4 @@
 #include <stdexcept>
-#include <QDebug>
 
 #include "piece.h"
 
