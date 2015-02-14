@@ -1,12 +1,12 @@
-#include "testpiece.h"
-#include "testposition.h"
+#include "piecetest.h"
+#include "positiontest.h"
 
 int main(int argc, char **argv)
 {
-    TestPiece testPiece;
-    TestPosition testPosition;
+    PieceTest pieceTests;
+    PositionTest positionTests;
 
-    QObject *classes[] = { &testPiece, &testPosition };
+    QObject *classes[] = { &pieceTests, &positionTests };
 
     int ret = EXIT_SUCCESS;
     for (auto &klass: classes)

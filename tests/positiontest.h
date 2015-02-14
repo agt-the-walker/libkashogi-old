@@ -1,6 +1,6 @@
 #include <QtTest/QtTest>
 
-class TestPosition: public QObject
+class PositionTest: public QObject
 {
     Q_OBJECT
 

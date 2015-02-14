@@ -1,7 +1,7 @@
 #include "position.h"
-#include "testposition.h"
+#include "positiontest.h"
 
-void TestPosition::identity()
+void PositionTest::identity()
 {
     QFETCH(QString, bodPath);
 
@@ -32,16 +32,16 @@ void TestPosition::identity()
     }
 }
 
-void TestPosition::identity_data()
+void PositionTest::identity_data()
 {
     QTest::addColumn<QString>("bodPath");
 
-    QDir dir("examples");
+    QDir dir(QT_TESTCASE_BUILDDIR "/../examples");
     for (QString &entry: dir.entryList(QDir::Files))
         QTest::newRow(qPrintable(entry)) << dir.filePath(entry);
 }
 
-void TestPosition::invalidBOD()
+void PositionTest::invalidBOD()
 {
     QFETCH(QString, bodPath);
 
@@ -60,11 +60,11 @@ void TestPosition::invalidBOD()
     }
 }
 
-void TestPosition::invalidBOD_data()
+void PositionTest::invalidBOD_data()
 {
     QTest::addColumn<QString>("bodPath");
 
-    QDir dir("examples/invalid");
+    QDir dir(QT_TESTCASE_BUILDDIR "/../examples/invalid");
     for (QString &entry: dir.entryList(QDir::Files))
         QTest::newRow(qPrintable(entry)) << dir.filePath(entry);
 }

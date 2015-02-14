@@ -1,10 +1,10 @@
 #include "piece.h"
-#include "testpiece.h"
+#include "piecetest.h"
 
 Q_DECLARE_METATYPE(Piece::Type)
 Q_DECLARE_METATYPE(Piece::Flavor)
 
-void TestPiece::invalid()
+void PieceTest::invalid()
 {
     QFETCH(Piece::Type, type);
     QFETCH(Piece::Flavor, flavor);
@@ -17,7 +17,7 @@ void TestPiece::invalid()
     }
 }
 
-void TestPiece::invalid_data()
+void PieceTest::invalid_data()
 {
     QTest::addColumn<Piece::Type>("type");
     QTest::addColumn<Piece::Flavor>("flavor");
@@ -27,7 +27,7 @@ void TestPiece::invalid_data()
     QTest::newRow("Rook cannot be jeweled")  << Piece::ROOK << Piece::JEWELED;
 }
 
-void TestPiece::invalidBOD()
+void PieceTest::invalidBOD()
 {
     QTextStream in(" ");  // too short
 
@@ -39,7 +39,7 @@ void TestPiece::invalidBOD()
     }
 }
 
-void TestPiece::unknownBOD()
+void PieceTest::unknownBOD()
 {
     QFETCH(QString, inBod);
 
@@ -48,7 +48,7 @@ void TestPiece::unknownBOD()
     QVERIFY(piece == nullptr);
 }
 
-void TestPiece::unknownBOD_data()
+void PieceTest::unknownBOD_data()
 {
     QTest::addColumn<QString>("inBod");
 
@@ -57,7 +57,7 @@ void TestPiece::unknownBOD_data()
     QTest::newRow("No piece")            << " ・";
 }
 
-void TestPiece::identity()
+void PieceTest::identity()
 {
     QFETCH(QString, inBod);
 
@@ -73,7 +73,7 @@ void TestPiece::identity()
     QCOMPARE(outBod, inBod);
 }
 
-void TestPiece::identity_data()
+void PieceTest::identity_data()
 {
     QTest::addColumn<QString>("inBod");
 
@@ -85,7 +85,7 @@ void TestPiece::identity_data()
     QTest::newRow("Gote promoted pawn")    << "vと";
 }
 
-void TestPiece::defaultCode()
+void PieceTest::defaultCode()
 {
     QFETCH(Piece::Type, type);
     QFETCH(QChar, code);
@@ -95,7 +95,7 @@ void TestPiece::defaultCode()
     QCOMPARE(Piece::type(code), type);
 }
 
-void TestPiece::defaultCode_data()
+void PieceTest::defaultCode_data()
 {
     QTest::addColumn<Piece::Type>("type");
     QTest::addColumn<QChar>("code");
@@ -105,7 +105,7 @@ void TestPiece::defaultCode_data()
     QTest::newRow("Pawn") << Piece::PAWN << QChar(u'歩');
 }
 
-void TestPiece::invalidCode()
+void PieceTest::invalidCode()
 {
     try {
         Piece::type(u'玉');
