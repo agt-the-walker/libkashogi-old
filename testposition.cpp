@@ -40,3 +40,31 @@ void TestPosition::identity_data()
     for (QString &entry: dir.entryList(QDir::Files))
         QTest::newRow(qPrintable(entry)) << dir.filePath(entry);
 }
+
+void TestPosition::invalidBOD()
+{
+    QFETCH(QString, bodPath);
+
+    QFile file(bodPath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        QFAIL("Cannot open file");
+
+    QTextStream in(&file);
+
+    try {
+        Position position(in);
+        QVERIFY(false);
+    } catch (std::runtime_error &e) {
+        QFileInfo fi(bodPath);
+        QCOMPARE(e.what(), qPrintable(fi.baseName()));
+    }
+}
+
+void TestPosition::invalidBOD_data()
+{
+    QTest::addColumn<QString>("bodPath");
+
+    QDir dir("examples/invalid");
+    for (QString &entry: dir.entryList(QDir::Files))
+        QTest::newRow(qPrintable(entry)) << dir.filePath(entry);
+}

@@ -7,4 +7,7 @@ class TestPosition: public QObject
 private slots:
     void identity();
     void identity_data();
+
+    void invalidBOD();
+    void invalidBOD_data();
 };
