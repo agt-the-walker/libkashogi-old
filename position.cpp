@@ -8,7 +8,10 @@ static const QChar japaneseNumerals[] = {
 static const int topJapaneseNumeral =
     sizeof(japaneseNumerals) / sizeof(japaneseNumerals[0]) - 1;
 
-static const QChar verticalSide = '|';
+static const QChar ideographicSpace = u'　',
+                   verticalSide = '|';
+
+static const QString capturedPieceLabel = "の持駒：";
 
 Position::Position()
 {
@@ -61,16 +64,17 @@ void Position::destroyBoard()
 
 void Position::loadCapturedPieces(QTextStream &stream)
 {
-    QRegExp rx("(.*)の持駒：(.*)");
-    if (rx.exactMatch(stream.readLine())) {
-        int player = playerNames.indexOf(rx.cap(1));
+    QStringList fields = stream.readLine().split(capturedPieceLabel);
+
+    if (fields.count() == 2) {
+        int player = playerNames.indexOf(fields[0]);
         if (player == -1)
             throw std::runtime_error("Unknown player");
 
-        if (rx.cap(2).isEmpty())
+        if (fields[1].isEmpty())
             return;
 
-        QStringList capturedPieces = rx.cap(2).split(u'　');
+        QStringList capturedPieces = fields[1].split(ideographicSpace);
         for (auto &capturedPiece: capturedPieces)
             loadCapturedPiece(capturedPiece, static_cast<Player>(player));
     }
@@ -120,7 +124,7 @@ void Position::loadBoard(QTextStream &stream)
 
 void Position::saveCapturedPieces(QTextStream &stream, Player player) const
 {
-    stream << playerNames[player] << QString("の持駒：");
+    stream << playerNames[player] << capturedPieceLabel;
 
     QStringList words;
     for (int type = 0; type < Piece::NB_TYPES; type++) {
@@ -141,7 +145,7 @@ void Position::saveCapturedPieces(QTextStream &stream, Player player) const
         words << word;
     }
 
-    stream << words.join(u'　') << endl;
+    stream << words.join(ideographicSpace) << endl;
 }
 
 void Position::saveBoard(QTextStream &stream) const
