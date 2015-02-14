@@ -1,23 +1,6 @@
 #include "position.h"
 #include "testposition.h"
 
-void TestPosition::empty()
-{
-    QFile file("examples/empty.bod");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        QFAIL("Cannot open file");
-    QTextStream in(&file);
-    QString inBod = in.readAll();
-
-    QString outBod;
-    QTextStream out(&outBod);
-
-    Position position;
-    position.saveBOD(out);
-
-    QCOMPARE(outBod, inBod);
-}
-
 void TestPosition::identity()
 {
     QFETCH(QString, bodPath);
@@ -36,6 +19,17 @@ void TestPosition::identity()
     position.saveBOD(out);
 
     QCOMPARE(outBod, inBod);
+
+    QFileInfo fi(bodPath);
+    if (fi.baseName() == "empty") {
+        QString emptyBod;
+        QTextStream out(&emptyBod);
+
+        Position position;
+        position.saveBOD(out);
+
+        QCOMPARE(emptyBod, inBod);
+    }
 }
 
 void TestPosition::identity_data()
