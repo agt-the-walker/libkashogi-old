@@ -20,7 +20,8 @@ Position::~Position()
     destroyBoard();
 }
 
-Position::Position(QTextStream &stream){
+Position::Position(QTextStream &stream)
+{
     reset();
 
     loadCapturedPieces(stream);
@@ -146,9 +147,8 @@ void Position::saveCapturedPieces(QTextStream &stream, Player player) const
 void Position::saveBoard(QTextStream &stream) const
 {
     static const QChar unicodeNumerals[] = {
-        0, u'１', u'２', u'３', u'４', u'５', u'６',u'７',u'８',u'９'
+        0, u'１', u'２', u'３', u'４', u'５', u'６', u'７', u'８', u'９'
     };
-
     for (int column = BOARD_SIZE; column >= 1; column--) {
         stream << unicodeNumerals[column];
         if (column > 1)
