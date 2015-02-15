@@ -9,11 +9,10 @@
 class Position
 {
 public:
-    Position();
+    Position() {};
     ~Position();
 
-    Position(QTextStream &stream);
-
+    void loadBOD(QTextStream &stream);
     void saveBOD(QTextStream &stream) const;
     const Piece *at(unsigned int row, unsigned int column) const;
 
@@ -23,18 +22,20 @@ private:
     Position(const Position&) = delete;
     Position& operator=(const Position&) = delete;
 
-    void reset();
-    void destroyBoard();
+    static void destroyBoard(Piece *board[BOARD_SIZE][BOARD_SIZE]);
 
-    void loadCapturedPieces(QTextStream &stream);
-    void loadCapturedPiece(QString capturedPiece, Player player);
-    void loadBoard(QTextStream &stream);
+    static void loadCapturedPieces(QTextStream &stream,
+            unsigned int capturedPieces[NB_PLAYERS][Piece::NB_TYPES]);
+    static void loadCapturedPiece(QString capturedPiece,
+            unsigned int capturedPieces[Piece::NB_TYPES]);
+    static void loadBoard(QTextStream &stream,
+            Piece *board[BOARD_SIZE][BOARD_SIZE]);
 
     void saveCapturedPieces(QTextStream &stream, Player player) const;
     void saveBoard(QTextStream &stream) const;
 
-    Piece *mPieces[BOARD_SIZE][BOARD_SIZE];
-    unsigned int mCapturedPieces[NB_PLAYERS][Piece::NB_TYPES];
+    Piece *mBoard[BOARD_SIZE][BOARD_SIZE] {};
+    unsigned int mCapturedPieces[NB_PLAYERS][Piece::NB_TYPES] {};
 };
 
 #endif

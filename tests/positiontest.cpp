@@ -15,7 +15,8 @@ void PositionTest::at()
         QFAIL("Cannot open file");
 
     QTextStream in(&file);
-    Position position(in);
+    Position position;
+    position.loadBOD(in);
 
     const Piece *piece = position.at(row, column);
     QCOMPARE(piece->player(), player);
@@ -49,7 +50,8 @@ void PositionTest::identity()
     QString outBod;
     QTextStream out(&outBod);
 
-    Position position(in);
+    Position position;
+    position.loadBOD(in);
     position.saveBOD(out);
 
     QCOMPARE(outBod, inBod);
@@ -84,9 +86,10 @@ void PositionTest::invalidBOD()
         QFAIL("Cannot open file");
 
     QTextStream in(&file);
+    Position position;
 
     try {
-        Position position(in);
+        position.loadBOD(in);
         QVERIFY(false);
     } catch (std::runtime_error &e) {
         QFileInfo fi(bodPath);

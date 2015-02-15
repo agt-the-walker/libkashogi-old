@@ -13,28 +13,31 @@ static const QChar ideographicSpace = u'　',
 
 static const QString capturedPieceLabel = "の持駒：";
 
-Position::Position()
-{
-    reset();
-}
-
 Position::~Position()
 {
-    destroyBoard();
+    destroyBoard(mBoard);
 }
 
-Position::Position(QTextStream &stream)
+void Position::loadBOD(QTextStream &stream)
 {
-    reset();
+    // we use temporary storage so that this object is left untouched if
+    //  this method raises an exception
+    Piece *board[BOARD_SIZE][BOARD_SIZE] {};
+    unsigned int capturedPieces[NB_PLAYERS][Piece::NB_TYPES] {};
 
-    loadCapturedPieces(stream);
+    loadCapturedPieces(stream, capturedPieces);
     try {
-        loadBoard(stream);
-        loadCapturedPieces(stream);
+        loadBoard(stream, board);
+        loadCapturedPieces(stream, capturedPieces);
     } catch (std::exception) {
-        destroyBoard();
+        destroyBoard(board);
         throw;
     }
+
+    memcpy(mBoard, board,
+           sizeof(Piece *) * BOARD_SIZE * BOARD_SIZE);
+    memcpy(mCapturedPieces, capturedPieces,
+           sizeof(unsigned int) * NB_PLAYERS * Piece::NB_TYPES);
 }
 
 void Position::saveBOD(QTextStream &stream) const
@@ -49,28 +52,18 @@ const Piece *Position::at(unsigned int row, unsigned int column) const
     if (row == 0 || row > BOARD_SIZE || column == 0 || column > BOARD_SIZE)
         throw std::out_of_range("invalid square");
 
-    return mPieces[row-1][column-1];
+    return mBoard[row-1][column-1];
 }
 
-void Position::reset()
+void Position::destroyBoard(Piece *board[BOARD_SIZE][BOARD_SIZE])
 {
     for (int row = 0; row < BOARD_SIZE; row++)
         for (int column = 0; column < BOARD_SIZE; column++)
-            mPieces[row][column] = nullptr;
-
-    for (int player = 0; player < NB_PLAYERS; player++)
-        for (int type = 0; type < Piece::NB_TYPES; type++)
-            mCapturedPieces[player][type] = 0;
+            delete board[row][column];
 }
 
-void Position::destroyBoard()
-{
-    for (int row = 0; row < BOARD_SIZE; row++)
-        for (int column = 0; column < BOARD_SIZE; column++)
-            delete mPieces[row][column];
-}
-
-void Position::loadCapturedPieces(QTextStream &stream)
+void Position::loadCapturedPieces(QTextStream &stream,
+        unsigned int capturedPieces[NB_PLAYERS][Piece::NB_TYPES])
 {
     QStringList fields = stream.readLine().split(capturedPieceLabel);
 
@@ -82,13 +75,13 @@ void Position::loadCapturedPieces(QTextStream &stream)
         if (fields[1].isEmpty())
             return;
 
-        QStringList capturedPieces = fields[1].split(ideographicSpace);
-        for (auto &capturedPiece: capturedPieces)
-            loadCapturedPiece(capturedPiece, static_cast<Player>(player));
+        for (auto &capturedPiece: fields[1].split(ideographicSpace))
+            loadCapturedPiece(capturedPiece, capturedPieces[player]);
     }
 }
 
-void Position::loadCapturedPiece(QString capturedPiece, Player player)
+void Position::loadCapturedPiece(QString capturedPiece,
+                                 unsigned int capturedPieces[Piece::NB_TYPES])
 {
     if (capturedPiece.isEmpty())
         throw std::runtime_error("Missing piece");
@@ -106,10 +99,11 @@ void Position::loadCapturedPiece(QString capturedPiece, Player player)
                 if (capturedPiece[i] == japaneseNumerals[num])
                     count += num;
 
-    mCapturedPieces[player][type] += count;
+    capturedPieces[type] += count;
 }
 
-void Position::loadBoard(QTextStream &stream)
+void Position::loadBoard(QTextStream &stream,
+                         Piece *board[BOARD_SIZE][BOARD_SIZE])
 {
     int row = 0;
 
@@ -121,7 +115,7 @@ void Position::loadBoard(QTextStream &stream)
         }
 
         for (int column = BOARD_SIZE-1; column >= 0; column--)
-            mPieces[row][column] = Piece::loadBOD(stream);
+            board[row][column] = Piece::loadBOD(stream);
 
         stream.readLine();
         row += 1;
@@ -176,7 +170,7 @@ void Position::saveBoard(QTextStream &stream) const
         stream << verticalSide;
 
         for (int column = BOARD_SIZE-1; column >= 0; column--) {
-            Piece *piece = mPieces[row][column];
+            Piece *piece = mBoard[row][column];
             if (piece != nullptr)
                 piece->saveBOD(stream);
             else
