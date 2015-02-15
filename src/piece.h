@@ -14,6 +14,9 @@ public:
 
     Piece(Player player, Type type, Flavor flavor = DEFAULT);
 
+    QChar code() const;
+    Player player() const { return mPlayer; };
+
     static Piece *loadBOD(QTextStream &stream);
     void saveBOD(QTextStream &stream) const;
 

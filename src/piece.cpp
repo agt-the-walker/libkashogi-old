@@ -33,6 +33,11 @@ Piece::Piece(Player player, Type type, Flavor flavor) {
         throw std::invalid_argument("piece type and flavor don't match");
 }
 
+QChar Piece::code() const
+{
+    return flavorCodes[mType][mFlavor];
+}
+
 Piece *Piece::loadBOD(QTextStream &stream)
 {
     QString buffer = stream.read(2);

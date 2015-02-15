@@ -44,11 +44,19 @@ void Position::saveBOD(QTextStream &stream) const
     saveCapturedPieces(stream, SENTE);
 }
 
+const Piece *Position::at(unsigned int row, unsigned int column) const
+{
+    if (row == 0 || row > BOARD_SIZE || column == 0 || column > BOARD_SIZE)
+        throw std::out_of_range("invalid square");
+
+    return mPieces[row-1][column-1];
+}
+
 void Position::reset()
 {
     for (int row = 0; row < BOARD_SIZE; row++)
-        for (int col = 0; col < BOARD_SIZE; col++)
-            mPieces[row][col] = nullptr;
+        for (int column = 0; column < BOARD_SIZE; column++)
+            mPieces[row][column] = nullptr;
 
     for (int player = 0; player < NB_PLAYERS; player++)
         for (int type = 0; type < Piece::NB_TYPES; type++)
@@ -58,8 +66,8 @@ void Position::reset()
 void Position::destroyBoard()
 {
     for (int row = 0; row < BOARD_SIZE; row++)
-        for (int col = 0; col < BOARD_SIZE; col++)
-            delete mPieces[row][col];
+        for (int column = 0; column < BOARD_SIZE; column++)
+            delete mPieces[row][column];
 }
 
 void Position::loadCapturedPieces(QTextStream &stream)
@@ -103,17 +111,17 @@ void Position::loadCapturedPiece(QString capturedPiece, Player player)
 
 void Position::loadBoard(QTextStream &stream)
 {
-    int row = 1;
+    int row = 0;
 
-    while (row <= BOARD_SIZE) {
+    while (row < BOARD_SIZE) {
         QString first = stream.read(1);
         if (first != verticalSide) {
             stream.readLine();
             continue;
         }
 
-        for (int column = BOARD_SIZE; column >= 1; column--)
-            mPieces[row-1][column-1] = Piece::loadBOD(stream);
+        for (int column = BOARD_SIZE-1; column >= 0; column--)
+            mPieces[row][column] = Piece::loadBOD(stream);
 
         stream.readLine();
         row += 1;
@@ -150,12 +158,12 @@ void Position::saveCapturedPieces(QTextStream &stream, Player player) const
 
 void Position::saveBoard(QTextStream &stream) const
 {
-    static const QChar unicodeNumerals[] = {
-        0, u'１', u'２', u'３', u'４', u'５', u'６', u'７', u'８', u'９'
+    static const QChar unicodeNumerals[BOARD_SIZE] = {
+        u'１', u'２', u'３', u'４', u'５', u'６', u'７', u'８', u'９'
     };
-    for (int column = BOARD_SIZE; column >= 1; column--) {
+    for (int column = BOARD_SIZE-1; column >= 0; column--) {
         stream << unicodeNumerals[column];
-        if (column > 1)
+        if (column > 0)
             stream << ' ';
     }
     stream << endl;
@@ -164,18 +172,18 @@ void Position::saveBoard(QTextStream &stream) const
 
     stream << horizontalSide << endl;
 
-    for (int row = 1; row <= BOARD_SIZE; row++) {
+    for (int row = 0; row < BOARD_SIZE; row++) {
         stream << verticalSide;
 
-        for (int column = BOARD_SIZE; column >= 1; column--) {
-            Piece *piece = mPieces[row-1][column-1];
+        for (int column = BOARD_SIZE-1; column >= 0; column--) {
+            Piece *piece = mPieces[row][column];
             if (piece != nullptr)
                 piece->saveBOD(stream);
             else
                 stream << QString(" ・");
         }
 
-        stream << verticalSide << japaneseNumerals[row] << endl;
+        stream << verticalSide << japaneseNumerals[row+1] << endl;
     }
 
     stream << horizontalSide << endl;

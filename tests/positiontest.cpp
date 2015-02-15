@@ -1,6 +1,40 @@
 #include "position.h"
 #include "positiontest.h"
 
+Q_DECLARE_METATYPE(Player)
+
+void PositionTest::at()
+{
+    QFETCH(int, row);
+    QFETCH(int, column);
+    QFETCH(Player, player);
+    QFETCH(QChar, code);
+
+    QFile file(QT_TESTCASE_BUILDDIR "/../examples/start.bod");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        QFAIL("Cannot open file");
+
+    QTextStream in(&file);
+    Position position(in);
+
+    const Piece *piece = position.at(row, column);
+    QCOMPARE(piece->player(), player);
+    QCOMPARE(piece->code(), code);
+}
+
+void PositionTest::at_data()
+{
+    QTest::addColumn<int>("row");
+    QTest::addColumn<int>("column");
+    QTest::addColumn<Player>("player");
+    QTest::addColumn<QChar>("code");
+
+    QTest::newRow("Sente jeweled general") << 9 << 5 << SENTE << QChar(u'玉');
+    QTest::newRow("Sente rook")            << 8 << 2 << SENTE << QChar(u'飛');
+    QTest::newRow("Gote bishop")           << 2 << 2 << GOTE  << QChar(u'角');
+    QTest::newRow("Gote king")             << 1 << 5 << GOTE  << QChar(u'王');
+}
+
 void PositionTest::identity()
 {
     QFETCH(QString, bodPath);

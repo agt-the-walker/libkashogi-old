@@ -15,12 +15,13 @@ public:
     Position(QTextStream &stream);
 
     void saveBOD(QTextStream &stream) const;
+    const Piece *at(unsigned int row, unsigned int column) const;
+
+    static const int BOARD_SIZE = 9;
 
 private:
-    enum { BOARD_SIZE = 9 };
-
-    Position(const Position&);
-    Position& operator=(const Position&);
+    Position(const Position&) = delete;
+    Position& operator=(const Position&) = delete;
 
     void reset();
     void destroyBoard();

@@ -60,9 +60,12 @@ void PieceTest::unknownBOD_data()
 void PieceTest::identity()
 {
     QFETCH(QString, inBod);
+    QFETCH(QChar, code);
 
     QTextStream in(&inBod);
     Piece *piece = Piece::loadBOD(in);
+
+    QCOMPARE(piece->code(), code);
 
     QString outBod;
     QTextStream out(&outBod);
@@ -76,13 +79,14 @@ void PieceTest::identity()
 void PieceTest::identity_data()
 {
     QTest::addColumn<QString>("inBod");
+    QTest::addColumn<QChar>("code");
 
-    QTest::newRow("Sente king")            << " 王";
-    QTest::newRow("Sente jeweled general") << " 玉";
-    QTest::newRow("Sente rook")            << " 飛";
-    QTest::newRow("Sente promoted rook")   << " 龍";
-    QTest::newRow("Gote pawn")             << "v歩";
-    QTest::newRow("Gote promoted pawn")    << "vと";
+    QTest::newRow("Sente king")            << " 王" << QChar(u'王');
+    QTest::newRow("Sente jeweled general") << " 玉" << QChar(u'玉');
+    QTest::newRow("Sente rook")            << " 飛" << QChar(u'飛');
+    QTest::newRow("Sente promoted rook")   << " 龍" << QChar(u'龍');
+    QTest::newRow("Gote pawn")             << "v歩" << QChar(u'歩');
+    QTest::newRow("Gote promoted pawn")    << "vと" << QChar(u'と');
 }
 
 void PieceTest::defaultCode()
