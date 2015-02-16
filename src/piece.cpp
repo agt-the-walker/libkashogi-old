@@ -2,7 +2,7 @@
 
 #include "piece.h"
 
-static const int flavorCodes[Piece::NB_TYPES][Piece::NB_FLAVORS] = {
+static const QChar flavorCodes[Piece::NB_TYPES][Piece::NB_FLAVORS] = {
     { u'王',    0 , u'玉'},
     { u'飛', u'龍',    0 },
     { u'角', u'馬',    0 },
