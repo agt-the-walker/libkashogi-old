@@ -34,10 +34,8 @@ void Position::loadBOD(QTextStream &stream)
         throw;
     }
 
-    memcpy(mBoard, board,
-           sizeof(Piece *) * BOARD_SIZE * BOARD_SIZE);
-    memcpy(mCapturedPieces, capturedPieces,
-           sizeof(unsigned int) * NB_PLAYERS * Piece::NB_TYPES);
+    memcpy(mBoard, board, sizeof(board));
+    memcpy(mCapturedPieces, capturedPieces, sizeof(capturedPieces));
 }
 
 void Position::saveBOD(QTextStream &stream) const
