@@ -22,8 +22,8 @@ void Position::loadBOD(QTextStream &stream)
 {
     // we use temporary storage so that this object is left untouched if
     //  this method raises an exception
-    Piece *board[BOARD_SIZE][BOARD_SIZE] {};
-    unsigned int capturedPieces[NB_PLAYERS][Piece::NB_TYPES] {};
+    board_t board {};
+    captured_t capturedPieces[NB_PLAYERS] {};
 
     loadCapturedPieces(stream, capturedPieces);
     try {
@@ -53,7 +53,7 @@ const Piece *Position::at(unsigned int row, unsigned int column) const
     return mBoard[row-1][column-1];
 }
 
-void Position::destroyBoard(Piece *board[BOARD_SIZE][BOARD_SIZE])
+void Position::destroyBoard(board_t board)
 {
     for (int row = 0; row < BOARD_SIZE; row++)
         for (int column = 0; column < BOARD_SIZE; column++)
@@ -61,7 +61,7 @@ void Position::destroyBoard(Piece *board[BOARD_SIZE][BOARD_SIZE])
 }
 
 void Position::loadCapturedPieces(QTextStream &stream,
-        unsigned int capturedPieces[NB_PLAYERS][Piece::NB_TYPES])
+                                  captured_t capturedPieces[NB_PLAYERS])
 {
     QStringList fields = stream.readLine().split(capturedPieceLabel);
 
@@ -79,7 +79,7 @@ void Position::loadCapturedPieces(QTextStream &stream,
 }
 
 void Position::loadCapturedPiece(QString capturedPiece,
-                                 unsigned int capturedPieces[Piece::NB_TYPES])
+                                 captured_t capturedPieces)
 {
     if (capturedPiece.isEmpty())
         throw std::runtime_error("Missing piece");
@@ -100,8 +100,7 @@ void Position::loadCapturedPiece(QString capturedPiece,
     capturedPieces[type] += count;
 }
 
-void Position::loadBoard(QTextStream &stream,
-                         Piece *board[BOARD_SIZE][BOARD_SIZE])
+void Position::loadBoard(QTextStream &stream, board_t board)
 {
     int row = 0;
 

@@ -22,20 +22,22 @@ private:
     Position(const Position&) = delete;
     Position& operator=(const Position&) = delete;
 
-    static void destroyBoard(Piece *board[BOARD_SIZE][BOARD_SIZE]);
+    typedef Piece * board_t[BOARD_SIZE][BOARD_SIZE];
+    typedef unsigned int captured_t[Piece::NB_TYPES];
+
+    static void destroyBoard(board_t board);
 
     static void loadCapturedPieces(QTextStream &stream,
-            unsigned int capturedPieces[NB_PLAYERS][Piece::NB_TYPES]);
+                                   captured_t capturedPieces[NB_PLAYERS]);
     static void loadCapturedPiece(QString capturedPiece,
-            unsigned int capturedPieces[Piece::NB_TYPES]);
-    static void loadBoard(QTextStream &stream,
-            Piece *board[BOARD_SIZE][BOARD_SIZE]);
+                                  captured_t capturedPieces);
+    static void loadBoard(QTextStream &stream, board_t board);
 
     void saveCapturedPieces(QTextStream &stream, Player player) const;
     void saveBoard(QTextStream &stream) const;
 
-    Piece *mBoard[BOARD_SIZE][BOARD_SIZE] {};
-    unsigned int mCapturedPieces[NB_PLAYERS][Piece::NB_TYPES] {};
+    board_t mBoard {};
+    captured_t mCapturedPieces[NB_PLAYERS] {};
 };
 
 #endif
