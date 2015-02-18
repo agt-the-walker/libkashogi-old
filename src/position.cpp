@@ -8,8 +8,7 @@ static const QChar japaneseNumerals[] = {
 static const int topJapaneseNumeral =
     sizeof(japaneseNumerals) / sizeof(japaneseNumerals[0]) - 1;
 
-static const QChar ideographicSpace = u'　',
-                   verticalSide = '|';
+static const QChar verticalSide = '|';
 
 static const QString capturedPieceLabel = "の持駒：";
 
@@ -73,7 +72,7 @@ void Position::loadCapturedPieces(QTextStream &stream,
         if (fields[1].isEmpty() || fields[1] == "なし")
             return;
 
-        for (auto &capturedPiece: fields[1].split(ideographicSpace))
+        for (auto &capturedPiece: fields[1].split(QRegExp("\\s+")))
             loadCapturedPiece(capturedPiece, capturedPieces[player]);
     }
 }
@@ -144,6 +143,7 @@ void Position::saveCapturedPieces(QTextStream &stream, Player player) const
         words << word;
     }
 
+    static const QChar ideographicSpace = u'　';
     stream << words.join(ideographicSpace) << endl;
 }
 
