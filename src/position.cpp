@@ -72,7 +72,8 @@ void Position::loadCapturedPieces(QTextStream &stream,
         if (fields[1].isEmpty() || fields[1] == "なし")
             return;
 
-        for (auto &capturedPiece: fields[1].split(QRegExp("\\s+")))
+        for (auto &capturedPiece: fields[1].split(QRegExp("\\s+"),
+                                                  QString::SkipEmptyParts))
             loadCapturedPiece(capturedPiece, capturedPieces[player]);
     }
 }
@@ -80,9 +81,6 @@ void Position::loadCapturedPieces(QTextStream &stream,
 void Position::loadCapturedPiece(QString capturedPiece,
                                  captured_t capturedPieces)
 {
-    if (capturedPiece.isEmpty())
-        throw std::runtime_error("Missing piece");
-
     Piece::Type type = Piece::type(capturedPiece[0]);
     if (type == Piece::KING)
         throw std::runtime_error("Captured piece cannot be the king");
