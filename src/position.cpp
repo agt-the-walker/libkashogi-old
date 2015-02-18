@@ -70,7 +70,7 @@ void Position::loadCapturedPieces(QTextStream &stream,
         if (player == -1)
             throw std::runtime_error("Unknown player");
 
-        if (fields[1].isEmpty())
+        if (fields[1].isEmpty() || fields[1] == "なし")
             return;
 
         for (auto &capturedPiece: fields[1].split(ideographicSpace))

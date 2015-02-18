@@ -66,6 +66,23 @@ void PositionTest::identity()
 
         QCOMPARE(emptyBod, inBod);
     }
+
+    fi = fi.dir().path() + "/variant/" + fi.fileName();
+    if (fi.exists()) {
+        QFile file(fi.filePath());
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            QFAIL("Cannot open variant file");
+        QTextStream in(&file);
+
+        QString variantBod;
+        QTextStream out(&variantBod);
+
+        Position position;
+        position.loadBOD(in);
+        position.saveBOD(out);
+
+        QCOMPARE(variantBod, inBod);
+    }
 }
 
 void PositionTest::identity_data()
