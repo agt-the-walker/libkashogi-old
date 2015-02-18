@@ -14,7 +14,9 @@ public:
 
     void loadBOD(QTextStream &stream);
     void saveBOD(QTextStream &stream) const;
+
     const Piece *at(unsigned int row, unsigned int column) const;
+    unsigned int nbCaptured(Player player, Piece::Type type) const;
 
     static const int BOARD_SIZE = 9;
 

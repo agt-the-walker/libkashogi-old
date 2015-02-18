@@ -52,6 +52,11 @@ const Piece *Position::at(unsigned int row, unsigned int column) const
     return mBoard[row-1][column-1];
 }
 
+unsigned int Position::nbCaptured(Player player, Piece::Type type) const
+{
+    return mCapturedPieces[player][type];
+}
+
 void Position::destroyBoard(board_t board)
 {
     for (int row = 0; row < BOARD_SIZE; row++)

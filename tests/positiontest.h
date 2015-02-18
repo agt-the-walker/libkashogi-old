@@ -8,6 +8,9 @@ private slots:
     void at();
     void at_data();
 
+    void nbCaptured();
+    void nbCaptured_data();
+
     void identity();
     void identity_data();
 

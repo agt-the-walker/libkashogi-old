@@ -2,6 +2,7 @@
 #include "positiontest.h"
 
 Q_DECLARE_METATYPE(Player)
+Q_DECLARE_METATYPE(Piece::Type)
 
 void PositionTest::at()
 {
@@ -34,6 +35,35 @@ void PositionTest::at_data()
     QTest::newRow("Sente rook")            << 8 << 2 << SENTE << QChar(u'飛');
     QTest::newRow("Gote bishop")           << 2 << 2 << GOTE  << QChar(u'角');
     QTest::newRow("Gote king")             << 1 << 5 << GOTE  << QChar(u'王');
+}
+
+void PositionTest::nbCaptured()
+{
+    QFETCH(Player, player);
+    QFETCH(Piece::Type, type);
+    QFETCH(unsigned int, nbCaptures);
+
+    QFile file(QT_TESTCASE_BUILDDIR "/../examples/captures.bod");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        QFAIL("Cannot open file");
+
+    QTextStream in(&file);
+    Position position;
+    position.loadBOD(in);
+
+    QCOMPARE(position.nbCaptured(player, type), nbCaptures);
+}
+
+void PositionTest::nbCaptured_data()
+{
+    QTest::addColumn<Player>("player");
+    QTest::addColumn<Piece::Type>("type");
+    QTest::addColumn<unsigned int>("nbCaptures");
+
+    QTest::newRow("Sente rooks") << SENTE << Piece::ROOK << 2u;
+    QTest::newRow("Sente pawns") << SENTE << Piece::PAWN << 18u;
+    QTest::newRow("Gote rooks")  << GOTE  << Piece::ROOK << 0u;
+    QTest::newRow("Gote pawns")  << GOTE  << Piece::PAWN << 0u;
 }
 
 void PositionTest::identity()
