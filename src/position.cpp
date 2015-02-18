@@ -104,7 +104,7 @@ void Position::loadBoard(QTextStream &stream, board_t board)
 {
     int row = 0;
 
-    while (row < BOARD_SIZE) {
+    while (row < BOARD_SIZE && !stream.atEnd()) {
         QString first = stream.read(1);
         if (first != verticalSide) {
             stream.readLine();
