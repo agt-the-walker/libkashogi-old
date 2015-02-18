@@ -17,20 +17,20 @@ Piece::Piece(Player player, Type type, Flavor flavor) {
     if (player < NB_PLAYERS)
         mPlayer = player;
     else
-        throw std::invalid_argument("unknown player");
+        throw std::invalid_argument("Unknown player");
 
     if (type < NB_TYPES)
         mType = type;
     else
-        throw std::invalid_argument("unknown piece type");
+        throw std::invalid_argument("Unknown piece type");
 
     if (flavor < NB_FLAVORS)
         mFlavor = flavor;
     else
-        throw std::invalid_argument("unknown piece flavor");
+        throw std::invalid_argument("Unknown piece flavor");
 
     if (flavorCodes[type][flavor] == 0)
-        throw std::invalid_argument("piece type and flavor don't match");
+        throw std::invalid_argument("Piece type and flavor don't match");
 }
 
 QChar Piece::code() const
@@ -42,7 +42,7 @@ Piece *Piece::loadBOD(QTextStream &stream)
 {
     QString buffer = stream.read(2);
     if (buffer.size() < 2)
-        throw std::runtime_error("incomplete piece");
+        throw std::runtime_error("Incomplete piece");
 
     Player player = (buffer[0] == 'v' ? GOTE : SENTE);
 
@@ -72,5 +72,5 @@ Piece::Type Piece::type(QChar defaultCode)
         if (defaultCode == flavorCodes[type][DEFAULT])
             return static_cast<Type>(type);
 
-    throw std::runtime_error("unknown piece");
+    throw std::runtime_error("Unknown piece");
 }

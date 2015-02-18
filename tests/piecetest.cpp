@@ -13,7 +13,7 @@ void PieceTest::invalid()
         Piece piece(SENTE, type, flavor);
         QVERIFY(false);
     } catch (std::invalid_argument &e) {
-        QCOMPARE(e.what(), "piece type and flavor don't match");
+        QCOMPARE(e.what(), "Piece type and flavor don't match");
     }
 }
 
@@ -35,7 +35,7 @@ void PieceTest::invalidBOD()
         Piece::loadBOD(in);
         QVERIFY(false);
     } catch (std::runtime_error &e) {
-        QCOMPARE(e.what(), "incomplete piece");
+        QCOMPARE(e.what(), "Incomplete piece");
     }
 }
 
@@ -115,6 +115,6 @@ void PieceTest::invalidCode()
         Piece::type(u'玉');
         QVERIFY(false);
     } catch (std::runtime_error &e) {
-        QCOMPARE(e.what(), "unknown piece");
+        QCOMPARE(e.what(), "Unknown piece");
     }
 }
