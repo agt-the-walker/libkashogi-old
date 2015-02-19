@@ -11,7 +11,8 @@ void PositionTest::at()
     QFETCH(Player, player);
     QFETCH(QChar, code);
 
-    QFile file(QT_TESTCASE_BUILDDIR "/../examples/start.bod");
+    QFile file(QStringLiteral(QT_TESTCASE_BUILDDIR) +
+               QLatin1String("/../examples/start.bod"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         QFAIL("Cannot open file");
 
@@ -43,7 +44,8 @@ void PositionTest::nbCaptured()
     QFETCH(Piece::Type, type);
     QFETCH(unsigned int, nbCaptures);
 
-    QFile file(QT_TESTCASE_BUILDDIR "/../examples/captures.bod");
+    QFile file(QStringLiteral(QT_TESTCASE_BUILDDIR) +
+               QLatin1String("/../examples/captures.bod"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         QFAIL("Cannot open file");
 
@@ -87,7 +89,7 @@ void PositionTest::identity()
     QCOMPARE(outBod, inBod);
 
     QFileInfo fi(bodPath);
-    if (fi.baseName() == "empty") {
+    if (fi.baseName() == QLatin1String("empty")) {
         QString emptyBod;
         QTextStream out(&emptyBod);
 
@@ -97,7 +99,7 @@ void PositionTest::identity()
         QCOMPARE(emptyBod, inBod);
     }
 
-    fi = fi.dir().path() + "/variant/" + fi.fileName();
+    fi = fi.dir().path() + QStringLiteral("/variant/") + fi.fileName();
     if (fi.exists()) {
         QFile file(fi.filePath());
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -119,7 +121,8 @@ void PositionTest::identity_data()
 {
     QTest::addColumn<QString>("bodPath");
 
-    QDir dir(QT_TESTCASE_BUILDDIR "/../examples");
+    QDir dir(QStringLiteral(QT_TESTCASE_BUILDDIR) +
+             QLatin1String("/../examples"));
     for (QString &entry: dir.entryList(QDir::Files))
         QTest::newRow(qPrintable(entry)) << dir.filePath(entry);
 }
@@ -148,7 +151,8 @@ void PositionTest::invalidBOD_data()
 {
     QTest::addColumn<QString>("bodPath");
 
-    QDir dir(QT_TESTCASE_BUILDDIR "/../examples/invalid");
+    QDir dir(QStringLiteral(QT_TESTCASE_BUILDDIR) +
+             QLatin1String("/../examples/invalid"));
     for (QString &entry: dir.entryList(QDir::Files))
         QTest::newRow(qPrintable(entry)) << dir.filePath(entry);
 }

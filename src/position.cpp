@@ -1,6 +1,7 @@
 #include "position.h"
 
-static const QStringList playerNames = { "先手", "後手" };
+static const QStringList playerNames { QStringLiteral("先手"),
+                                       QStringLiteral("後手") };
 
 static const QChar japaneseNumerals[] = {
     0, u'一', u'二', u'三', u'四', u'五', u'六', u'七', u'八', u'九', u'十'
@@ -8,9 +9,9 @@ static const QChar japaneseNumerals[] = {
 static const int topJapaneseNumeral =
     sizeof(japaneseNumerals) / sizeof(japaneseNumerals[0]) - 1;
 
-static const QChar verticalSide = '|';
+static const QChar verticalSide = u'|';
 
-static const QString capturedPieceLabel = "の持駒：";
+static const QString capturedPieceLabel = QStringLiteral("の持駒：");
 
 Position::~Position()
 {
@@ -74,11 +75,11 @@ void Position::loadCapturedPieces(QTextStream &stream,
         if (player == -1)
             throw std::runtime_error("Unknown player");
 
-        if (fields[1].isEmpty() || fields[1] == "なし")
+        if (fields[1].isEmpty() || fields[1] == QStringLiteral("なし"))
             return;
 
-        for (auto &capturedPiece: fields[1].split(QRegExp("\\s+"),
-                                                  QString::SkipEmptyParts))
+        for (auto &capturedPiece: fields[1].split(
+                QRegExp(QStringLiteral("\\s+")), QString::SkipEmptyParts))
             loadCapturedPiece(capturedPiece, capturedPieces[player]);
     }
 }
@@ -162,7 +163,8 @@ void Position::saveBoard(QTextStream &stream) const
     }
     stream << endl;
 
-    static const QString horizontalSide = "+---------------------------+";
+    static const QString horizontalSide =
+            QStringLiteral("+---------------------------+");
 
     stream << horizontalSide << endl;
 
@@ -174,7 +176,7 @@ void Position::saveBoard(QTextStream &stream) const
             if (piece != nullptr)
                 piece->saveBOD(stream);
             else
-                stream << QString(" ・");
+                stream << QStringLiteral(" ・");
         }
 
         stream << verticalSide << japaneseNumerals[row+1] << endl;

@@ -44,7 +44,7 @@ Piece *Piece::loadBOD(QTextStream &stream)
     if (buffer.size() < 2)
         throw std::runtime_error("Incomplete piece");
 
-    Player player = (buffer[0] == 'v' ? GOTE : SENTE);
+    Player player = (buffer[0] == QChar::fromLatin1('v') ? GOTE : SENTE);
 
     for (int type = 0; type < NB_TYPES; type++)
         for (int flavor = 0; flavor < NB_FLAVORS; flavor++)
