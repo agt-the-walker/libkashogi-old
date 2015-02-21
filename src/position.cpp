@@ -20,6 +20,8 @@ Position::~Position()
 
 void Position::loadBOD(QTextStream &stream)
 {
+    stream.setCodec("UTF-8");
+
     // we use temporary storage so that this object is left untouched if
     //  this method raises an exception
     board_t board {};
@@ -40,6 +42,8 @@ void Position::loadBOD(QTextStream &stream)
 
 void Position::saveBOD(QTextStream &stream) const
 {
+    stream.setCodec("UTF-8");
+
     saveCapturedPieces(stream, GOTE);
     saveBoard(stream);
     saveCapturedPieces(stream, SENTE);

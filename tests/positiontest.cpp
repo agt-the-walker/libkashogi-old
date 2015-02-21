@@ -76,6 +76,7 @@ void PositionTest::identity()
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         QFAIL("Cannot open file");
     QTextStream in(&file);
+    in.setCodec("UTF-8");
     QString inBod = in.readAll();
     in.seek(0);
 
