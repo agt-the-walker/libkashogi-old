@@ -1,5 +1,5 @@
 CONFIG += c++11
-QMAKE_CXXFLAGS += -Werror
+QMAKE_CXXFLAGS += -Werror -Wextra -pedantic
 
 DEFINES += QT_NO_CAST_FROM_ASCII \
            QT_NO_CAST_TO_ASCII
