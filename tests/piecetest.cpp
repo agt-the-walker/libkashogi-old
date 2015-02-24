@@ -45,7 +45,7 @@ void PieceTest::unknownBOD()
 
     QTextStream in(&inBod);
     Piece *piece = Piece::loadBOD(in);
-    QVERIFY(piece == nullptr);
+    QVERIFY(!piece);
 }
 
 void PieceTest::unknownBOD_data()

@@ -177,7 +177,7 @@ void Position::saveBoard(QTextStream &stream) const
 
         for (int column = BOARD_SIZE-1; column >= 0; column--) {
             Piece *piece = mBoard[row][column];
-            if (piece != nullptr)
+            if (piece)
                 piece->saveBOD(stream);
             else
                 stream << QStringLiteral(" ・");
