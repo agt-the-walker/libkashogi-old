@@ -3,7 +3,11 @@ compiler:
   - clang
   - gcc
 script:
-  - qmake -spec linux-$CXX
+  - if [[ $CXX = clang ]]; then
+        qmake -spec linux-clang
+    else
+        gmake
+    fi
   - make check
 before_install:
   - sudo apt-get update -qq
