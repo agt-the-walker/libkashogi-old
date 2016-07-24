@@ -9,6 +9,8 @@ class Piece
 {
 public:
     enum Type { KING, ROOK, BISHOP, GOLD, SILVER, KNIGHT, LANCE, PAWN,
+                FALCON, CRANE, PHEASANT, LEFT_QUAIL, RIGHT_QUAIL, SWALLOW,
+                QUEEN, FIDE_KNIGHT, REVERSE_CHARIOT,
                 NB_TYPES };
     enum Flavor { DEFAULT, PROMOTED, JEWELED, NB_FLAVORS };
 

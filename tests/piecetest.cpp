@@ -53,7 +53,7 @@ void PieceTest::unknownBOD_data()
     QTest::addColumn<QString>("inBod");
 
     QTest::newRow("Unknown sente piece") << " 竜";
-    QTest::newRow("Unknown gote piece")  << "v今";
+    QTest::newRow("Unknown gote piece")  << "v个";
     QTest::newRow("No piece")            << " ・";
 }
 
@@ -107,6 +107,7 @@ void PieceTest::defaultCode_data()
     QTest::newRow("King") << Piece::KING << QChar(u'王');
     QTest::newRow("Rook") << Piece::ROOK << QChar(u'飛');
     QTest::newRow("Pawn") << Piece::PAWN << QChar(u'歩');
+    QTest::newRow("Reverse Chariot") << Piece::REVERSE_CHARIOT << QChar(u'反');
 }
 
 void PieceTest::invalidCode()

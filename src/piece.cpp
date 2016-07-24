@@ -3,6 +3,7 @@
 #include "piece.h"
 
 static const QChar flavorCodes[Piece::NB_TYPES][Piece::NB_FLAVORS] = {
+    // standard
     { u'王',    0 , u'玉'},
     { u'飛', u'龍',    0 },
     { u'角', u'馬',    0 },
@@ -11,6 +12,19 @@ static const QChar flavorCodes[Piece::NB_TYPES][Piece::NB_FLAVORS] = {
     { u'桂', u'圭',    0 },
     { u'香', u'杏',    0 },
     { u'歩', u'と',    0 },
+
+    // Tori
+    { u'象', u'鵰',    0 },
+    { u'鶴',     0,    0 },
+    { u'雉',     0,    0 },
+    { u'左',     0,    0 },
+    { u'右',     0,    0 },
+    { u'燕', u'鴈',    0 },
+
+    // Okisaki
+    { u'妃',     0,    0 },
+    { u'跳', u'今',    0 },
+    { u'反', u'仝',    0 },
 };
 
 Piece::Piece(Player player, Type type, Flavor flavor) {
