@@ -4,9 +4,9 @@ compiler:
   - gcc
 script:
   - if [[ $CXX = clang ]]; then
-        qmake -spec linux-clang
+        qmake -spec linux-clang;
     else
-        gmake
+        qmake;
     fi
   - make check
 before_install:
