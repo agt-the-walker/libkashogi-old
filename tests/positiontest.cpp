@@ -100,21 +100,21 @@ void PositionTest::identity()
         QCOMPARE(emptyBod, inBod);
     }
 
-    fi = fi.dir().path() + QStringLiteral("/variant/") + fi.fileName();
+    fi = fi.dir().path() + QStringLiteral("/alternate/") + fi.fileName();
     if (fi.exists()) {
         QFile file(fi.filePath());
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-            QFAIL("Cannot open variant file");
+            QFAIL("Cannot open alternate file");
         QTextStream in(&file);
 
-        QString variantBod;
-        QTextStream out(&variantBod);
+        QString alternateBod;
+        QTextStream out(&alternateBod);
 
         Position position;
         position.loadBOD(in);
         position.saveBOD(out);
 
-        QCOMPARE(variantBod, inBod);
+        QCOMPARE(alternateBod, inBod);
     }
 }
 
