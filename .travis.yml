@@ -3,7 +3,7 @@ compiler:
   - clang
   - gcc
 script:
-  - if [[ $CXX = clang ]]; then
+  - if [[ $CXX = clang++ ]]; then
         qmake -spec linux-clang;
     else
         qmake;
