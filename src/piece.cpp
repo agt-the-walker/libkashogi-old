@@ -13,14 +13,6 @@ static const QChar flavorCodes[Piece::NB_TYPES][Piece::NB_FLAVORS] = {
     { u'香', u'杏',    0 },
     { u'歩', u'と',    0 },
 
-    // Tori
-    { u'象', u'鵰',    0 },
-    { u'鶴',     0,    0 },
-    { u'雉',     0,    0 },
-    { u'左',     0,    0 },
-    { u'右',     0,    0 },
-    { u'燕', u'鴈',    0 },
-
     // Okisaki
     { u'妃',     0,    0 },
     { u'跳', u'今',    0 },
