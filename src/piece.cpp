@@ -76,8 +76,7 @@ void Piece::saveBOD(QTextStream &stream) const
 
 unsigned int Piece::typeIndex(const QChar type)
 {
-    unsigned int typeIndex;
-    for (typeIndex = 0; typeIndex < NB_TYPES; typeIndex++)
+    for (unsigned int typeIndex = 0; typeIndex < NB_TYPES; typeIndex++)
         if (TYPES_FLAVORS[typeIndex][DEFAULT] == type)
             return typeIndex;
 
