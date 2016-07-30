@@ -22,6 +22,9 @@ static const QChar TYPES_FLAVORS[][Piece::NB_FLAVORS] = {
 static const unsigned int NB_TYPES = sizeof(TYPES_FLAVORS) /
                                      sizeof(TYPES_FLAVORS[0]);
 
+static const QChar SENTE_PREFIX = u' ';
+static const QChar GOTE_PREFIX = u'v';
+
 Piece::Piece(const Player player, const QChar type, const Flavor flavor) {
     if (player < NB_PLAYERS)
         mPlayer = player;
@@ -54,7 +57,7 @@ Piece *Piece::loadBOD(QTextStream &stream)
     if (buffer.size() < 2)
         throw std::runtime_error("Incomplete piece");
 
-    Player player = (buffer[0] == QChar::fromLatin1('v') ? GOTE : SENTE);
+    Player player = (buffer[0] == GOTE_PREFIX ? GOTE : SENTE);
 
     // XXX: use lookup table?
     for (unsigned int typeIndex = 0; typeIndex < NB_TYPES; typeIndex++)
@@ -68,7 +71,7 @@ Piece *Piece::loadBOD(QTextStream &stream)
 
 void Piece::saveBOD(QTextStream &stream) const
 {
-    stream << (mPlayer == SENTE ? ' ' : 'v') << kanji();
+    stream << (mPlayer == SENTE ? SENTE_PREFIX : GOTE_PREFIX) << kanji();
 }
 
 unsigned int Piece::typeIndex(const QChar type)
