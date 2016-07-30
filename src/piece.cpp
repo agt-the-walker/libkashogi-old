@@ -2,7 +2,7 @@
 
 #include "piece.h"
 
-static const QChar flavorCodes[Piece::NB_TYPES][Piece::NB_FLAVORS] = {
+static const QChar TYPES_FLAVORS[][Piece::NB_FLAVORS] = {
     // standard
     { u'王',    0 , u'玉'},
     { u'飛', u'龍',    0 },
@@ -19,29 +19,33 @@ static const QChar flavorCodes[Piece::NB_TYPES][Piece::NB_FLAVORS] = {
     { u'反', u'仝',    0 },
 };
 
-Piece::Piece(Player player, Type type, Flavor flavor) {
+static const unsigned int NB_TYPES = sizeof(TYPES_FLAVORS) /
+                                     sizeof(TYPES_FLAVORS[0]);
+
+Piece::Piece(const Player player, const QChar type, const Flavor flavor) {
     if (player < NB_PLAYERS)
         mPlayer = player;
     else
         throw std::invalid_argument("Unknown player");
-
-    if (type < NB_TYPES)
-        mType = type;
-    else
-        throw std::invalid_argument("Unknown piece type");
 
     if (flavor < NB_FLAVORS)
         mFlavor = flavor;
     else
         throw std::invalid_argument("Unknown piece flavor");
 
-    if (flavorCodes[type][flavor] == 0)
+    mTypeIndex = Piece::typeIndex(type);
+    if (TYPES_FLAVORS[mTypeIndex][flavor] == 0)
         throw std::invalid_argument("Piece type and flavor don't match");
 }
 
-QChar Piece::code() const
+QChar Piece::type() const
 {
-    return flavorCodes[mType][mFlavor];
+    return TYPES_FLAVORS[mTypeIndex][DEFAULT];
+}
+
+QChar Piece::kanji() const
+{
+    return TYPES_FLAVORS[mTypeIndex][mFlavor];
 }
 
 Piece *Piece::loadBOD(QTextStream &stream)
@@ -52,10 +56,11 @@ Piece *Piece::loadBOD(QTextStream &stream)
 
     Player player = (buffer[0] == QChar::fromLatin1('v') ? GOTE : SENTE);
 
-    for (int type = 0; type < NB_TYPES; type++)
+    // XXX: use lookup table?
+    for (unsigned int typeIndex = 0; typeIndex < NB_TYPES; typeIndex++)
         for (int flavor = 0; flavor < NB_FLAVORS; flavor++)
-            if (buffer[1] == flavorCodes[type][flavor])
-                return new Piece(player, static_cast<Type>(type),
+            if (buffer[1] == TYPES_FLAVORS[typeIndex][flavor])
+                return new Piece(player, TYPES_FLAVORS[typeIndex][DEFAULT],
                                          static_cast<Flavor>(flavor));
 
     return nullptr;
@@ -63,20 +68,15 @@ Piece *Piece::loadBOD(QTextStream &stream)
 
 void Piece::saveBOD(QTextStream &stream) const
 {
-    stream << (mPlayer == SENTE ? ' ' : 'v')
-           << QChar(flavorCodes[mType][mFlavor]);
+    stream << (mPlayer == SENTE ? ' ' : 'v') << kanji();
 }
 
-QChar Piece::defaultCode(Type type)
+unsigned int Piece::typeIndex(const QChar type)
 {
-    return flavorCodes[type][DEFAULT];
-}
+    unsigned int typeIndex;
+    for (typeIndex = 0; typeIndex < NB_TYPES; typeIndex++)
+        if (TYPES_FLAVORS[typeIndex][DEFAULT] == type)
+            return typeIndex;
 
-Piece::Type Piece::type(QChar defaultCode)
-{
-    for (int type = 0; type < NB_TYPES; type++)
-        if (defaultCode == flavorCodes[type][DEFAULT])
-            return static_cast<Type>(type);
-
-    throw std::runtime_error("Unknown piece");
+    throw std::invalid_argument("Unknown piece type");
 }

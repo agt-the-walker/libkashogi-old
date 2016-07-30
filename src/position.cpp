@@ -37,7 +37,8 @@ void Position::loadBOD(QTextStream &stream)
     }
 
     memcpy(mBoard, board, sizeof(board));
-    memcpy(mCapturedPieces, capturedPieces, sizeof(capturedPieces));
+    for (int player = 0; player < NB_PLAYERS; player++)
+        mCapturedPieces[player] = std::move(capturedPieces[player]);
 }
 
 void Position::saveBOD(QTextStream &stream) const
@@ -57,7 +58,7 @@ const Piece *Position::at(unsigned int row, unsigned int column) const
     return mBoard[row-1][column-1];
 }
 
-unsigned int Position::nbCaptured(Player player, Piece::Type type) const
+unsigned int Position::nbCaptured(Player player, QChar type) const
 {
     return mCapturedPieces[player][type];
 }
@@ -89,11 +90,12 @@ void Position::loadCapturedPieces(QTextStream &stream,
 }
 
 void Position::loadCapturedPiece(QString capturedPiece,
-                                 captured_t capturedPieces)
+                                 captured_t &capturedPieces)
 {
-    Piece::Type type = Piece::type(capturedPiece[0]);
-    if (type == Piece::KING)
+    QChar type = capturedPiece[0];
+    if (Piece::isKing(type))
         throw std::runtime_error("Captured piece cannot be the king");
+    Piece::typeIndex(type);  // XXX: raises an exception if unknown piece (ugly)
 
     int count = 0;
     if (capturedPiece.length() == 1)
@@ -133,13 +135,23 @@ void Position::saveCapturedPieces(QTextStream &stream, Player player) const
     stream << playerNames[player] << capturedPieceLabel;
 
     QStringList words;
-    for (int type = 0; type < Piece::NB_TYPES; type++) {
+    QMap<unsigned int, QChar> typeFromIndex;  // of captured pieces
+
+    for (auto it = mCapturedPieces[player].constBegin(); 
+              it != mCapturedPieces[player].constEnd(); ++it) {
+        QChar type = it.key();
+        typeFromIndex[Piece::typeIndex(type)] = type;
+    }
+
+    for (auto it = typeFromIndex.constBegin(); 
+              it != typeFromIndex.constEnd(); ++it) {
+        QChar type = it.value();
         unsigned int nbPieces = mCapturedPieces[player][type];
 
         if (nbPieces == 0)
             continue;
 
-        QString word = Piece::defaultCode(static_cast<Piece::Type>(type));
+        QString word = type;
 
         while (nbPieces >= topJapaneseNumeral) {
             word.append(japaneseNumerals[topJapaneseNumeral]);

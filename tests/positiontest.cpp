@@ -2,14 +2,13 @@
 #include "positiontest.h"
 
 Q_DECLARE_METATYPE(Player)
-Q_DECLARE_METATYPE(Piece::Type)
 
 void PositionTest::at()
 {
     QFETCH(int, row);
     QFETCH(int, column);
     QFETCH(Player, player);
-    QFETCH(QChar, code);
+    QFETCH(QChar, kanji);
 
     QFile file(QStringLiteral(QT_TESTCASE_BUILDDIR) +
                QLatin1String("/../examples/start.bod"));
@@ -22,7 +21,7 @@ void PositionTest::at()
 
     const Piece *piece = position.at(row, column);
     QCOMPARE(piece->player(), player);
-    QCOMPARE(piece->code(), code);
+    QCOMPARE(piece->kanji(), kanji);
 }
 
 void PositionTest::at_data()
@@ -30,7 +29,7 @@ void PositionTest::at_data()
     QTest::addColumn<int>("row");
     QTest::addColumn<int>("column");
     QTest::addColumn<Player>("player");
-    QTest::addColumn<QChar>("code");
+    QTest::addColumn<QChar>("kanji");
 
     QTest::newRow("Sente jeweled general") << 9 << 5 << SENTE << QChar(u'玉');
     QTest::newRow("Sente rook")            << 8 << 2 << SENTE << QChar(u'飛');
@@ -41,7 +40,7 @@ void PositionTest::at_data()
 void PositionTest::nbCaptured()
 {
     QFETCH(Player, player);
-    QFETCH(Piece::Type, type);
+    QFETCH(QChar, type);
     QFETCH(unsigned int, nbCaptures);
 
     QFile file(QStringLiteral(QT_TESTCASE_BUILDDIR) +
@@ -59,13 +58,13 @@ void PositionTest::nbCaptured()
 void PositionTest::nbCaptured_data()
 {
     QTest::addColumn<Player>("player");
-    QTest::addColumn<Piece::Type>("type");
+    QTest::addColumn<QChar>("type");
     QTest::addColumn<unsigned int>("nbCaptures");
 
-    QTest::newRow("Sente rooks") << SENTE << Piece::ROOK << 2u;
-    QTest::newRow("Sente pawns") << SENTE << Piece::PAWN << 18u;
-    QTest::newRow("Gote rooks")  << GOTE  << Piece::ROOK << 0u;
-    QTest::newRow("Gote pawns")  << GOTE  << Piece::PAWN << 0u;
+    QTest::newRow("Sente rooks") << SENTE << QChar(u'飛') << 2u;
+    QTest::newRow("Sente pawns") << SENTE << QChar(u'歩') << 18u;
+    QTest::newRow("Gote rooks")  << GOTE  << QChar(u'飛') << 0u;
+    QTest::newRow("Gote pawns")  << GOTE  << QChar(u'歩') << 0u;
 }
 
 void PositionTest::identity()
@@ -142,7 +141,7 @@ void PositionTest::invalidBOD()
     try {
         position.loadBOD(in);
         QVERIFY(false);
-    } catch (std::runtime_error &e) {
+    } catch (std::exception &e) {
         QFileInfo fi(bodPath);
         QCOMPARE(e.what(), qPrintable(fi.baseName()));
     }

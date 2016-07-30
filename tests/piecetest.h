@@ -16,8 +16,8 @@ private slots:
     void identity();
     void identity_data();
 
-    void defaultCode();
-    void defaultCode_data();
+    void accessors();
+    void accessors_data();
 
-    void invalidCode();
+    void invalidType();
 };
