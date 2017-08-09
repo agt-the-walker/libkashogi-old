@@ -1,5 +1,7 @@
 *.a
 *.o
+.qmake.stash
 Makefile*
 moc_*
 testrunner
+tests/target_wrapper.sh
