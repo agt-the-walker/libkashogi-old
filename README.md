@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.org/agt-the-walker/libkashogi.svg?branch=master)](https://travis-ci.org/agt-the-walker/libkashogi)
+[![Build Status](https://travis-ci.org/agt-the-walker/libkashogi-old.svg?branch=master)](https://travis-ci.org/agt-the-walker/libkashogi-old)
