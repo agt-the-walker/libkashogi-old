@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.org/agt-the-walker/libkashogi-old.svg?branch=master)](https://travis-ci.org/agt-the-walker/libkashogi-old)
+![C++ workflow](https://github.com/agt-the-walker/libkashogi-old/actions/workflows/cpp.yml/badge.svg)
