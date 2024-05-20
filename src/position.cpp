@@ -31,7 +31,7 @@ void Position::loadBOD(QTextStream &stream)
     try {
         loadBoard(stream, board);
         loadCapturedPieces(stream, capturedPieces);
-    } catch (std::exception) {
+    } catch (std::exception const&) {
         destroyBoard(board);
         throw;
     }
@@ -84,7 +84,8 @@ void Position::loadCapturedPieces(QTextStream &stream,
             return;
 
         for (auto &capturedPiece: fields[1].split(
-                QRegExp(QStringLiteral("\\s+")), QString::SkipEmptyParts))
+                QRegularExpression(QStringLiteral("\\s+")),
+                Qt::SkipEmptyParts))
             loadCapturedPiece(capturedPiece, capturedPieces[player]);
     }
 }
@@ -164,7 +165,7 @@ void Position::saveCapturedPieces(QTextStream &stream, Player player) const
     }
 
     static const QChar ideographicSpace = u'　';
-    stream << words.join(ideographicSpace) << endl;
+    stream << words.join(ideographicSpace) << Qt::endl;
 }
 
 void Position::saveBoard(QTextStream &stream) const
@@ -177,12 +178,12 @@ void Position::saveBoard(QTextStream &stream) const
         if (column > 0)
             stream << ' ';
     }
-    stream << endl;
+    stream << Qt::endl;
 
     static const QString horizontalSide =
             QStringLiteral("+---------------------------+");
 
-    stream << horizontalSide << endl;
+    stream << horizontalSide << Qt::endl;
 
     for (int row = 0; row < BOARD_SIZE; row++) {
         stream << verticalSide;
@@ -195,8 +196,8 @@ void Position::saveBoard(QTextStream &stream) const
                 stream << QStringLiteral(" ・");
         }
 
-        stream << verticalSide << japaneseNumerals[row+1] << endl;
+        stream << verticalSide << japaneseNumerals[row+1] << Qt::endl;
     }
 
-    stream << horizontalSide << endl;
+    stream << horizontalSide << Qt::endl;
 }
