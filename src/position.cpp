@@ -84,7 +84,8 @@ void Position::loadCapturedPieces(QTextStream &stream,
             return;
 
         for (auto &capturedPiece: fields[1].split(
-                QRegularExpression(QStringLiteral("\\s+")),
+                QRegularExpression(QStringLiteral("\\s+"),
+                        QRegularExpression::UseUnicodePropertiesOption),
                 Qt::SkipEmptyParts))
             loadCapturedPiece(capturedPiece, capturedPieces[player]);
     }
